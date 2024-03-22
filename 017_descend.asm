@@ -1,44 +1,56 @@
-;descend
-;Descend is a verb that means to pass from a higher place or level to a lower one, 
-;or to originate or come from an ancestral stock or source.
+;demo descend sorting in array
+;Descend is a verb that means to pass from a higher place or level to a lower one, or to originate or come from an ancestral stock or source.
+
+	BUBBLE	equ	30h	;the memory address 30h storing intermediate value for sorting algorithm
 
 	org	00h
-	sjmp	Setup
+	sjmp	Setup	;2 bytes instruction
 
-	MOV R0, #0AH ; Initialize pass counter.
+Array:
+	DB	35, 76, 98, 123, 99, 65, 23, 54, 86, 31
 
-REP1: MOV DPTR, #4000H ; Initialize memory pointer
+	org	10h
+Setup:
+	mov	R1, #0Ah	;Initialize byte counter.
+	mov	R0, #3Ah	;Copy array into memory address 3Ah-44h
+	;mov	BUBBLE, 3Ah	;the 1st number inside array now stored in BUBBLE
+	mov	DPTR, #Array	;Load dptr from array as memory pointer.
 
-MOV R1, #0AH ; Initialize byte counter
+Dataload:
+	clr	A
+	movc	A, @A+DPTR	;Load number in array to memory location 3Ah.
+	mov	@R0, A
 
-REPEAT: MOV R2, DPL ; Save the lower byte address
+	inc	R0
+	inc	DPTR
+	djnz	R1, Dataload
 
-MOVX A, @DPTR ; Read the number from array
+	mov	R2, #09h	;index for number left for ascend sorting
 
-MOV 0F0H, A ; Store the number in register B
+Ascend:
+	mov	A, R2
+	mov	R1, A		;reload the iterate times into R1
+	mov	R0, #3Ah	;repoint R0 to the 1st number in memory
+	
+Iterate:
+	mov	A, @R0	;Load next number into ACC register
+	inc	R0
+	mov	BUBBLE, @R0
 
-INC DPTR ; Increment memory pointer
+	cjne	A, BUBBLE, Compare	;If current MAX != next number then go to Compare.
+	sjmp	Judge
 
-MOVX A, @DPTR ; Take the next number from array
+Compare:
+	jnc	Judge	;If A - current number < the previous number - MAX then go to Judge.
 
-CJNE A, 0F0H, NEXT ; Compare number with next number
+	mov	@R0, A	;store A into the latter number
+	dec	R0	;R0 now point to the former number
+	mov	@R0, BUBBLE	;store BUBBLE into the former number location
+	inc	R0	;restore R0 value
+	
+Judge:
+	djnz	R1, Iterate	;Decrement byte counter by 1, if it != 0, then go to Iterate.
 
-AJMP SKIP ; Jump to SKIP unconditionally
-
-NEXT: JNC SKIP ; If number>next number then go to SKIP
-
-MOV DPL, R2 ; Else exchange the number with next number
-
-MOVX @DPTR, A ; Copy greater number to memory location
-
-INC DPTR ; Increment memory pointer
-
-MOV A, 0F0H
-
-MOVX @DPTR, A
-
-SKIP: DJNZ R1, REPEAT ; Decrement byte counter by 1, if byte counter\u2260 0 then go to REPEAT.
-
-DJNZ R0, REP1 ; Decrement pass counter if not zero then go to REP1
-
-STOP: AJMP STOP ; Stop
+	djnz	R2, Ascend	;Ascend all numbers inside array
+	
+	end
