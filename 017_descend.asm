@@ -51,6 +51,6 @@ Compare:
 Judge:
 	djnz	R1, Iterate	;Decrement byte counter by 1, if it != 0, then go to Iterate.
 
-	djnz	R2, Descend	;Ascend all numbers inside array
+	djnz	R2, Descend	;Descend all numbers inside array
 	
 	end
