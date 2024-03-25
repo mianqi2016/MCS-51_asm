@@ -27,7 +27,7 @@ Dataload:
 
 	mov	R2, #09h	;index for number left for ascend sorting
 
-Ascend:
+Descend:
 	mov	A, R2
 	mov	R1, A		;reload the iterate times into R1
 	mov	R0, #3Ah	;repoint R0 to the 1st number in memory
@@ -51,6 +51,6 @@ Compare:
 Judge:
 	djnz	R1, Iterate	;Decrement byte counter by 1, if it != 0, then go to Iterate.
 
-	djnz	R2, Ascend	;Ascend all numbers inside array
+	djnz	R2, Descend	;Descend all numbers inside array
 	
 	end
