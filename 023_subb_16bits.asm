@@ -37,7 +37,7 @@ Setup:
 	org	11h
 Main:
 	mov	R6, #34h	;Load the low byte of the 1st value into R6
-	mov	R7, #12h	;LOad the high byte of the 1st value into R7
+	mov	R7, #12h	;Load the high byte of the 1st value into R7
 
 	mov	R4, #78h	;Load the low byte of the 2nd value into R4
 	mov	R5, #56h	;Load the high byte of the 2nd value into R5
