@@ -1,4 +1,6 @@
 ;030_servo_no_interrupt
+;MCU - STC89C516RD+
+;Servo(micro servo) - Tower Pro MG90S
 
 ;main.asm
 	PIN_SERVO	bit	P2.0
@@ -22,31 +24,31 @@ Setup:
 	org	0100H
 Main:
 
-	mov	R6, 255
+	mov	R6, 2
 Turn_0_degree:		;-90 degree
 	lcall	Angle_0_degrees
 	djnz	R6, Turn_0_degree
 	;lcall	delay_1_second_loop
 
-	mov	R6, 255
+	mov	R6, 2
 Turn_45_degree:		;-45 degree
 	lcall	Angle_45_degrees
 	djnz	R6, Turn_45_degree
 	;lcall	delay_1_second_loop
 
-	mov	R6, 255
+	mov	R6, 2
 Turn_90_degree:		;Zero degree
 	lcall	Angle_90_degrees
 	djnz	R6, Turn_90_degree
 	;lcall	delay_1_second_loop
 
-	mov	R6, 255
+	mov	R6, 2
 Turn_135_degree:	;45 degree		
 	lcall	Angle_135_degrees
 	djnz	R6, Turn_135_degree
 	;lcall	delay_1_second_loop
 
-	mov	R6, 255
+	mov	R6, 2
 Turn_180_degree:	;90 degree	
 	lcall	Angle_180_degrees
 	djnz	R6, Turn_180_degree
@@ -63,14 +65,19 @@ ISR_Timer0_Servo:
 ;20ms = 921600/50=18432=0x4800, 65535-18432=1=47104=0xB800
 ;0.5ms=460.8=461=01CDH, FFFFH-01CDH+1=FE33H
 ;19.5ms=921.6*19.5=17971.2=17971=4633H, FFFFH-4633H+1=B9CDH
+;4800H-01CDH=4633H
 ;1ms=922H=039AH, FFFFH-039AH+1=FC66H
 ;19ms=921.6*19=17510.4=17510=4466H, FFFFH-4466H+1=BB9AH
+;4800H-039AH=4466H
 ;1.5ms=921.6*1.5=1382.4=1382=0566H, FFFFH-0566H+1=FA9AH
 ;18.5ms=921.6*18.5=17049.6=17050=429AH, FFFFH-429AH+1=BD66H
+;4800H-0566H=429AH
 ;2ms = 921600/500=1843.2 almost=1843=0x733, FFFFH-733H+1=F8CDH
 ;18ms=921.6*18=16588.8=16589=40CDH, FFFFH-40CDH+1=BF33H
+;4800H-0733H=40CDH
 ;2.5ms=921.6*2.5=2304=900H, FFFFH-900H+1=F700H
 ;17.5ms=921.6*17.5=16128=3F00H, FFFFH-3F00H+1=C100H
+;4800H-0900H=3F00H
 ;0.5ms=-90 degree, 1ms=-45 degree, 1.5ms=zero degree, 2ms=45 degree, 2.5ms=90 degree
 
 Angle_0_degrees:	;pulse width = 0.5ms
